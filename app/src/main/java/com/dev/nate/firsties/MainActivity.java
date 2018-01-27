@@ -1,15 +1,15 @@
 package com.dev.nate.firsties;
 
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcel;
 import android.os.Process;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,24 +20,24 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int BK_NORMAL = 0xffffbb33;
+    private static final int BK_NORMAL = Color.BLACK;
     private static final int BK_RED = 0xffcc0000;
     private static final int BK_GREEN = 0xff1fff33;
-
-    private static final String[] WORDS = {"clip", "basket", "panama", "powder", "pear",
-            "baklava", "orange", "you", "glad", "did not", "say", "terrier","country", "palm",
-            "coconut", "leaves", "herb", "potassium", "tires", "balderdash", "baseball", "billiards",
-            "bananarama", "alakadabra", "boat", "savannah", "bonanza", "plantain", "bandanna",
-            "pendant", "boomerang", "batman", "boat", "sombrero"};
 
     private static final int[] FAIL_COLORS = {BK_RED, BK_NORMAL, BK_RED, BK_NORMAL};
     private static final int[] HIT_COLORS = {BK_GREEN, BK_NORMAL};
 
+    private static final int[] IMAGES = {R.drawable.carrot, R.drawable.peanut, R.drawable.bigegg,
+        R.drawable.bread, R.drawable.cheesewedge, R.drawable.chilipepper, R.drawable.garlic,
+        R.drawable.pear, R.drawable.pizzaslice, R.drawable.tacos, R.drawable.tangerine,
+        R.drawable.tomato};
+    public static final int BANANA = R.drawable.banana;
+    public static final int START = R.drawable.playbutton;
+    public static final int HIGH_SCORE = R.drawable.highscore;
+    public static final int GAME_OVER = R.drawable.stopsign;
+    public static final int THUMBS_UP = R.drawable.thumbup;
+
     public static final String TAG = "Banana";
-    public static final String HIGH_SCORE = "HIGH SCORE!!!";
-    public static final String GAME_OVER = "Game over";
-    public static final String START = "Start";
-    public static final String BANANA = "banana";
 
 
     private Vibrator vibrator;
@@ -46,12 +46,12 @@ public class MainActivity extends AppCompatActivity {
         private long wait = 800;
         private Random rand = new Random();
         private boolean stop = false;
-        private List<String> randomWords = new ArrayList<>();
+        private List<Integer> randomImages = new ArrayList<>();
         private Sender sender;
 
-        public void stop(String finalText) {
+        public void stop(int image) {
             stop = true;
-            sender.sendWord(finalText);
+            sender.sendImage(image);
         }
 
         public void incDifficulty() {
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             while (!stop) {
-                sender.sendWord(randomWord());
+                sender.sendImage(randomImage());
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e) {
@@ -76,14 +76,14 @@ public class MainActivity extends AppCompatActivity {
              }
         }
 
-        private String randomWord() {
-            if (randomWords.isEmpty()) {
-                while (randomWords.size() < 10) {
-                    randomWords.add(WORDS[rand.nextInt(WORDS.length)]);
+        private int randomImage() {
+            if (randomImages.isEmpty()) {
+                while (randomImages.size() < 10) {
+                    randomImages.add(IMAGES[rand.nextInt(IMAGES.length)]);
                 }
-                randomWords.add(rand.nextInt(10), BANANA);
+                randomImages.add(rand.nextInt(10), BANANA);
             }
-            return randomWords.remove(0);
+            return randomImages.remove(0);
         }
 
      }
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 Log.d(TAG, "Interrupted!");
             }
-            sender.sendWord(START);
+            sender.sendImage(START);
         }
     }
 
@@ -125,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
 
     private class Sender {
 
-        private void sendWord(String word) {
+        private void sendImage(int image) {
             Bundle bundle = new Bundle();
-            bundle.putString("word", word);
+            bundle.putInt("image", image);
             Message message = new Message();
             message.setData(bundle);
             handler.sendMessage(message);
@@ -138,19 +138,20 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if (crazyView.getText().equals(BANANA)) {
+            if (getBananaButtonImage() == BANANA) {
+                Log.d(TAG, "Missed a banana");
                 incFails();
                 safe = true;
             } else {
                 safe = false;
             }
-            String word  = msg.getData().getString("word");
 
-            crazyView.setText(word);
+            int image  = msg.getData().getInt("image");
+            setBananaButtonImage(image);
         }
     };
 
-    private Handler backgroundHandler = new Handler() {
+     private Handler backgroundHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             int color = msg.getData().getInt("color");
@@ -162,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     private ExecutorService executor;
     private BananaDBHandler dbHandler;
     private Changer changer;
-    private TextView crazyView;
+    private ImageButton bananaButton;
     private TextView hitsView;
     private TextView failsView;
     private TextView scoreView;
@@ -181,7 +182,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         background = findViewById(R.id.background);
-        crazyView = findViewById(R.id.bananaView);
+        background.setBackgroundColor(BK_NORMAL);
+        bananaButton = findViewById(R.id.bananaView);
+        bananaButton.setTag(START);
         hitsView = findViewById(R.id.hitsView);
         failsView = findViewById(R.id.failsView);
         scoreView = findViewById(R.id.scoreView);
@@ -190,6 +193,8 @@ public class MainActivity extends AppCompatActivity {
         long highScore = getHighScore();
         highScoreView.setText(Long.toString(highScore));
         executor = Executors.newFixedThreadPool(2);
+
+        Log.d(TAG, "Banana is: " + Integer.toString(BANANA));
     }
 
     private void startGame() {
@@ -208,18 +213,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clicked(View view) {
-        String currentText = crazyView.getText().toString();
-        Log.d(TAG, currentText);
-        if (currentText.equals(START)) {
-            startGame();
-        } else if (currentText.equals(BANANA)) {
-            incHits();
-        } else if (currentText.equals(GAME_OVER) || currentText.equals(HIGH_SCORE)) {
-            //nothing
-         } else if (!safe){
-            incFails();
+        int bananaButtonTag = getBananaButtonImage();
+        Log.d(TAG, Integer.toString(bananaButtonTag));
+
+        switch (bananaButtonTag) {
+            case START :
+                startGame();
+                break;
+            case BANANA :
+                setBananaButtonImage(THUMBS_UP);
+                incHits();
+                break;
+            case GAME_OVER :
+            case HIGH_SCORE :
+            case THUMBS_UP :
+                break;
+            default:
+                if (!safe) {
+                    incFails();
+                }
         }
-    }
+
+     }
 
     public void reset(View view) {
         dbHandler.updateHighScore(0L);
@@ -229,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
     private void incFails() {
         failsCount++;
         failsView.setText(Integer.toString(failsCount));
-        crazyView.setText("MISSED!");
 
         startFlasher(FAIL_COLORS);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -273,15 +287,22 @@ public class MainActivity extends AppCompatActivity {
         hitsCount++;
         hitsView.setText(Integer.toString(hitsCount));
         changer.incDifficulty();
-        crazyView.setText("Great!");
         startFlasher(HIT_COLORS);
     }
 
+    private int getBananaButtonImage() {
+        return (Integer)bananaButton.getTag();
+    }
+
+    private void setBananaButtonImage(int image) {
+        bananaButton.setImageResource(image);
+        bananaButton.setTag(image);
+    }
 
     @Override
     protected void onStop() {
        Log.d(TAG, "Stopping");
-       if (changer != null) changer.stop("Closing...");
+       if (changer != null) changer.stop(GAME_OVER);
         if (executor != null) executor.shutdownNow();
         dbHandler.close();
         Process.killProcess(Process.myPid());
