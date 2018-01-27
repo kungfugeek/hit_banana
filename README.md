@@ -15,4 +15,4 @@ Your score is just the count of milliseconds you lasted before failing 3 times.
 #### Minimum android version is Marshmallow (API 23).
 
 
-![Screenshot](https://github.com/kungfugeek/hit_banana/screenshots/Screenshot_20180122-140608.png)
+![Screenshot](https://github.com/kungfugeek/hit_banana/blob/master/screenshots/Screenshot_20180122-140608.png)
