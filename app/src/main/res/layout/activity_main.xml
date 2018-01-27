@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffbb33"
+    android:id="@+id/background"
+    tools:context="com.dev.nate.firsties.MainActivity">
+
+    <TextView
+        android:id="@+id/highScoreLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="10dp"
+        android:text="High Score: "
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/highScoreField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="280dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/defaultHits"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/highScoreLabel"
+        app:layout_constraintStart_toStartOf="@+id/highScoreLabel"
+        app:layout_constraintRight_toRightOf="@+id/highScoreLabel"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/hitsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="104dp"
+        android:text="@string/defaultHits"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hitsfield"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="27dp"
+        android:layout_marginTop="104dp"
+        android:text="@string/scorefield"
+        android:textSize="30sp"
+        app:layout_constraintRight_toRightOf="@+id/hitsView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/faillabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="298dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="90dp"
+        android:text="@string/failfield"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/hitsView"
+        app:layout_constraintStart_toStartOf="@+id/hitsView"
+        app:layout_constraintTop_toBottomOf="@+id/hitsView" />
+
+    <TextView
+        android:id="@+id/failsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="@string/defaultHits"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/hitsView"
+        app:layout_constraintRight_toRightOf="@+id/faillabel"
+        app:layout_constraintStart_toStartOf="@+id/hitsView"
+        app:layout_constraintTop_toBottomOf="@+id/hitsfield"
+        app:layout_constraintVertical_chainStyle="spread" />
+
+    <Button
+        android:id="@+id/bananaView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:onClick="clicked"
+        android:text="@string/welcome_message"
+        app:layout_constraintBottom_toBottomOf="@+id/failsView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/scorelabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="90dp"
+        android:layout_marginTop="20dp"
+        android:text="Score:"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/bananaView"
+        app:layout_constraintStart_toStartOf="@+id/bananaView"
+        app:layout_constraintTop_toBottomOf="@+id/bananaView" />
+
+    <TextView
+        android:id="@+id/scoreView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/defaultHits"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/scorelabel"
+        app:layout_constraintRight_toRightOf="@+id/scorelabel"
+        app:layout_constraintStart_toStartOf="@+id/scorelabel"
+        app:layout_constraintTop_toBottomOf="@+id/bananaView"
+        app:layout_constraintVertical_chainStyle="spread" />
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="450dp"
+        android:onClick="reset"
+        android:text="Reset High Score"
+        app:layout_constraintBottom_toBottomOf="@+id/scoreView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

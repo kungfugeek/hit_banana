@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Hit Banana</string>
+    <string name="welcome_message">Start</string>
+    <string name="scorefield">Hits:</string>
+    <string name="failfield">Fails:</string>
+    <string name="defaultHits">0</string>
+</resources>
