@@ -1,20 +1,22 @@
 package com.dev.nate.firsties;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -30,15 +32,25 @@ public class MainActivity extends AppCompatActivity {
     private static final int[] IMAGES = {R.drawable.carrot, R.drawable.peanut, R.drawable.bigegg,
         R.drawable.bread, R.drawable.cheesewedge, R.drawable.chilipepper, R.drawable.garlic,
         R.drawable.pear, R.drawable.pizzaslice, R.drawable.tacos, R.drawable.tangerine,
-        R.drawable.tomato};
-    public static final int BANANA = R.drawable.banana;
+        R.drawable.tomato, R.drawable.yellowpepper, R.drawable.greenpepper};
+
+    public static final int YELLOW_BANANA = R.drawable.banana;
+    public static final int RED_BANANA = R.drawable.redbanana;
+    public static final int GREEN_BANANA = R.drawable.greenbanana;
+    public static final int[] BANANAS = {YELLOW_BANANA, RED_BANANA, GREEN_BANANA};
+    public static final Set<Integer> BANANA_SET;
+
     public static final int START = R.drawable.playbutton;
     public static final int HIGH_SCORE = R.drawable.highscore;
     public static final int GAME_OVER = R.drawable.stopsign;
     public static final int THUMBS_UP = R.drawable.thumbup;
 
-    public static final String TAG = "Banana";
+    public static final String TAG = "HitBanana";
 
+    static {
+        BANANA_SET = new HashSet<>();
+        for (int banana : BANANAS) BANANA_SET.add(banana);
+    }
 
     private Vibrator vibrator;
 
@@ -78,10 +90,10 @@ public class MainActivity extends AppCompatActivity {
 
         private int randomImage() {
             if (randomImages.isEmpty()) {
-                while (randomImages.size() < 10) {
+                while (randomImages.size() < 8) {
                     randomImages.add(IMAGES[rand.nextInt(IMAGES.length)]);
                 }
-                randomImages.add(rand.nextInt(10), BANANA);
+                randomImages.add(rand.nextInt(8), BANANAS[rand.nextInt(BANANAS.length)]);
             }
             return randomImages.remove(0);
         }
@@ -138,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if (getBananaButtonImage() == BANANA) {
+            if (BANANA_SET.contains(getBananaButtonImage())) {
                 Log.d(TAG, "Missed a banana");
                 incFails();
                 safe = true;
@@ -193,8 +205,6 @@ public class MainActivity extends AppCompatActivity {
         long highScore = getHighScore();
         highScoreView.setText(Long.toString(highScore));
         executor = Executors.newFixedThreadPool(2);
-
-        Log.d(TAG, "Banana is: " + Integer.toString(BANANA));
     }
 
     private void startGame() {
@@ -220,16 +230,15 @@ public class MainActivity extends AppCompatActivity {
             case START :
                 startGame();
                 break;
-            case BANANA :
-                setBananaButtonImage(THUMBS_UP);
-                incHits();
-                break;
             case GAME_OVER :
             case HIGH_SCORE :
             case THUMBS_UP :
                 break;
             default:
-                if (!safe) {
+                if (BANANA_SET.contains(bananaButtonTag)) {
+                    setBananaButtonImage(THUMBS_UP);
+                    incHits();
+                } else if (!safe) {
                     incFails();
                 }
         }
